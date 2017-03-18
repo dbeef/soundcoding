@@ -7,6 +7,104 @@
     <groupId>com.dbeef</groupId>
     <artifactId>soundprocessing</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+<dependencies>
+    <dependency>
+        <groupId>beads</groupId>
+        <artifactId>beads</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/beads.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>beads-io</groupId>
+        <artifactId>beads-io</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/beads-io.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>jarjar</groupId>
+        <artifactId>jarjar</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/jarjar-1.0.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>jl</groupId>
+        <artifactId>jl</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/jl1.0.1.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>jna</groupId>
+        <artifactId>jna</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/jna.jar</systemPath>
+    </dependency>
+
+    <dependency>
+        <groupId>mp3</groupId>
+        <artifactId>mp3</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/mp3spi1.9.4.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>org-jaudiolibs-audioservers</groupId>
+        <artifactId>org-jaudiolibs-audioservers</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/org-jaudiolibs-audioservers.jar</systemPath>
+    </dependency>
+
+    <dependency>
+        <groupId>org-jaudiolibs-audioservers-jack</groupId>
+        <artifactId>org-jaudiolibs-audioservers-jack</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/org-jaudiolibs-audioservers-jack.jar</systemPath>
+    </dependency>
+
+    <dependency>
+        <groupId>org-jaudiolibs-audioservers-javasound</groupId>
+        <artifactId>org-jaudiolibs-audioservers-javasound</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/org-jaudiolibs-audioservers-javasound.jar</systemPath>
+    </dependency>
+
+    <dependency>
+        <groupId>org-jaudiolibs-jnajack</groupId>
+        <artifactId>org-jaudiolibs-jnajack</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/org-jaudiolibs-jnajack.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>tools</groupId>
+        <artifactId>tools</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/tools.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>tritonus_aos</groupId>
+        <artifactId>tritonus_aos</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/tritonus_aos-0.3.6.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>tritonus_share</groupId>
+        <artifactId>tritonus_share</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/jars/beads/tritonus_share.jar</systemPath>
+    </dependency>
+</dependencies>
     <build>
         <plugins>
             <plugin>

@@ -14,5 +14,122 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="TarsosDSP-latest" level="project" />
     <orderEntry type="library" name="beads-io1" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: beads:beads:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/beads.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: beads-io:beads-io:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/beads-io.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: jarjar:jarjar:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/jarjar-1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: jl:jl:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/jl1.0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: jna:jna:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/jna.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: mp3:mp3:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/mp3spi1.9.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org-jaudiolibs-audioservers:org-jaudiolibs-audioservers:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/org-jaudiolibs-audioservers.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org-jaudiolibs-audioservers-jack:org-jaudiolibs-audioservers-jack:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/org-jaudiolibs-audioservers-jack.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org-jaudiolibs-audioservers-javasound:org-jaudiolibs-audioservers-javasound:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/org-jaudiolibs-audioservers-javasound.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org-jaudiolibs-jnajack:org-jaudiolibs-jnajack:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/org-jaudiolibs-jnajack.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: tools:tools:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/tools.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: tritonus_aos:tritonus_aos:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/tritonus_aos-0.3.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: tritonus_share:tritonus_share:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/beads/tritonus_share.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

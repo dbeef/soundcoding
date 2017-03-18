@@ -9,7 +9,7 @@ import javax.sound.sampled.Mixer.Info;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
-public class Shared {
+public class SnifferUtils {
 	
 	public static Vector<Info> getMixerInfo(
 			final boolean supportsPlayback, final boolean supportsRecording) {
