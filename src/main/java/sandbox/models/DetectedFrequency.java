@@ -13,24 +13,26 @@ public class DetectedFrequency {
     private String matchedSign;
 
     public DetectedFrequency(float timeOfDetection, float detectedFrequency) {
-        if (detectedFrequency > 2950 && detectedFrequency < 3050) {
-            matchedFrequency = Variables.PAUSE_FREQUENCY;
-            matchedSign = " ";
-        } else if (detectedFrequency > 2450 && detectedFrequency < 2550) {
-            matchedFrequency = Variables.ZERO_FREQUENCY;
-            matchedSign = "0";
-        } else if (detectedFrequency > 1950 && detectedFrequency < 2050) {
-            matchedFrequency = Variables.ONE_FREQUENCY;
-            matchedSign = "1";
+        for (int a = 0; a < Variables.DECIMAL_FREQUENCIES.length; a++) {
+            if (detectedFrequency > Variables.DECIMAL_FREQUENCIES[a] - Variables.TOLERANCE && detectedFrequency < Variables.DECIMAL_FREQUENCIES[a] +
+                    Variables.TOLERANCE) {
+                matchedFrequency = Variables.DECIMAL_FREQUENCIES[a];
+                matchedSign = Integer.toString(a);
+            }
         }
-        else if (detectedFrequency > 3450 && detectedFrequency < 3550) {
-            matchedFrequency = Variables.START_END_FREQUENCY;
-            matchedSign = "/";
-        }
-        else
-        {
-            matchedFrequency = detectedFrequency;
-            matchedSign = "";
+        if (matchedSign == null) {
+            if (detectedFrequency > Variables.PAUSE_FREQUENCY - Variables.TOLERANCE && detectedFrequency < Variables.PAUSE_FREQUENCY +
+                    Variables.TOLERANCE) {
+                matchedFrequency = Variables.PAUSE_FREQUENCY;
+                matchedSign = " ";
+            } else if (detectedFrequency > Variables.START_END_FREQUENCY - Variables.TOLERANCE && detectedFrequency < Variables.START_END_FREQUENCY +
+                    Variables.TOLERANCE) {
+                matchedFrequency = Variables.START_END_FREQUENCY;
+                matchedSign = "/";
+            } else {
+                matchedFrequency = detectedFrequency;
+                matchedSign = "";
+            }
         }
     }
 

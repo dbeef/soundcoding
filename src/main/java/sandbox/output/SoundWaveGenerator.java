@@ -12,8 +12,9 @@ public class SoundWaveGenerator implements Runnable {
 
     private AudioContext audioContext;
 
-    private WavePlayer zeroWavePlayer;
-    private WavePlayer oneWavePlayer;
+
+    private WavePlayer decimalWavePlayers[];
+
     private WavePlayer pauseWavePlayer;
     private WavePlayer start_endWavePlayer;
 
@@ -21,9 +22,9 @@ public class SoundWaveGenerator implements Runnable {
 
     public SoundWaveGenerator() {
         audioContext = new AudioContext();
-
-        zeroWavePlayer = new WavePlayer(audioContext, Variables.ZERO_FREQUENCY, Buffer.SINE);
-        oneWavePlayer = new WavePlayer(audioContext, Variables.ONE_FREQUENCY, Buffer.SINE);
+decimalWavePlayers = new WavePlayer[10];
+        for(int a =0;a<10;a++)
+            decimalWavePlayers[a] =  new WavePlayer(audioContext, Variables.DECIMAL_FREQUENCIES[a], Buffer.SINE);
         pauseWavePlayer = new WavePlayer(audioContext, Variables.PAUSE_FREQUENCY, Buffer.SINE);
         start_endWavePlayer = new WavePlayer(audioContext, Variables.START_END_FREQUENCY, Buffer.SINE);
 
@@ -47,12 +48,11 @@ public class SoundWaveGenerator implements Runnable {
 
     @Override
     public void run() {
+        for(int a =0;a<10;a++)
+            if(frequency == (Variables.DECIMAL_FREQUENCIES[a]))
+                audioContext.out.addInput(decimalWavePlayers[a]);
         if(frequency == (Variables.PAUSE_FREQUENCY))
         audioContext.out.addInput(pauseWavePlayer);
-        if(frequency ==(Variables.ONE_FREQUENCY))
-            audioContext.out.addInput(oneWavePlayer);
-        if(frequency == (Variables.ZERO_FREQUENCY))
-            audioContext.out.addInput(zeroWavePlayer);
         if(frequency == (Variables.START_END_FREQUENCY))
             audioContext.out.addInput(start_endWavePlayer);
 

@@ -27,14 +27,14 @@ public class Broadcaster {
         t.run();
 
         try {
-            Thread.sleep(Variables.MESSAGE_INTERVAL * 10);
+            Thread.sleep(Variables.MESSAGE_INTERVAL * 3);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
         soundWaveGenerator.stop();
 
         try {
-            Thread.sleep(Variables.MESSAGE_INTERVAL * 10);
+            Thread.sleep(Variables.MESSAGE_INTERVAL * 3);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
@@ -46,10 +46,12 @@ public class Broadcaster {
 
         for (int a = 0; a < message.length(); a++) {
 
-            if (message.charAt(a) == '0')
-                soundWaveGenerator.setFrequency(Variables.ZERO_FREQUENCY);
-            else
-                soundWaveGenerator.setFrequency(Variables.ONE_FREQUENCY);
+            for (int b = 0; b < Variables.DECIMAL_FREQUENCIES.length; b++) {
+                if (Integer.parseInt(Character.toString(message.charAt(a))) == b) {
+                    soundWaveGenerator.setFrequency(Variables.DECIMAL_FREQUENCIES[b]);
+                System.out.println("Now " + Variables.DECIMAL_FREQUENCIES[b]);
+                }
+            }
 
             t.run();
             while (!soundWaveGenerator.getAudioContext().isRunning()) {
@@ -95,7 +97,7 @@ public class Broadcaster {
 
         soundWaveGenerator.setFrequency(Variables.START_END_FREQUENCY);
         t.run();
-        waitFor(Variables.MESSAGE_INTERVAL*10);
+        waitFor(Variables.MESSAGE_INTERVAL * 3);
         soundWaveGenerator.stop();
         t.stop();
         long endTime = System.currentTimeMillis();

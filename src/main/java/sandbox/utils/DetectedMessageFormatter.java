@@ -72,7 +72,9 @@ public class DetectedMessageFormatter {
     public String formatMessageInASCII(String formattedMessage) {
         if (!formattedMessage.equals("")) {
 
-            int code = Integer.parseInt(formattedMessage, 2);
+            int code = Integer.parseInt(formattedMessage, 10);
+//2 for binary
+            //10 for decimal string
             char p = (char) code;
             formattedMessageInASCII = Character.toString(p);
             return formattedMessageInASCII;

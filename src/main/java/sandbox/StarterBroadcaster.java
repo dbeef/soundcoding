@@ -19,6 +19,8 @@ public class StarterBroadcaster implements Runnable {
         System.out.println(Integer.toBinaryString(character));
         System.out.println("First character of string you typed in hex:");
         System.out.println(Integer.toHexString(character));
+        System.out.println("First character of string you typed in decimal:");
+        System.out.println(Integer.toString(character));
 
         System.out.println("Now sending your message.");
 
@@ -27,7 +29,7 @@ public class StarterBroadcaster implements Runnable {
 
     static String readString() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Enter one character:");
+        System.out.print("Enter string to broadcast:");
         String s = br.readLine();
         return s;
     }
@@ -35,17 +37,29 @@ public class StarterBroadcaster implements Runnable {
     @Override
     public void run() {
         while (true) {
-            Broadcaster broadcaster = new Broadcaster();
-
+            String s = null;
             try {
-                broadcaster.sendMessage(Integer.toBinaryString(
-                        takeInput()));
+                s = readString();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
+            long startTime = System.currentTimeMillis();
+
+            for (int a = 0; a < s.length(); a++) {
+                System.out.println("Sending " + s.charAt(a));
+                Broadcaster broadcaster = new Broadcaster();
+                broadcaster.sendMessage(Integer.toString((int) s.charAt(a)));
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             System.out.println("Done.");
+            long endTime = System.currentTimeMillis();
+            long totalTime = endTime - startTime;
+            System.out.println("Total time of sending whole message in (ms): " + totalTime);
         }
     }
-
 }
