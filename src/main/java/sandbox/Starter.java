@@ -1,10 +1,13 @@
 package sandbox;
 
+import com.google.gson.Gson;
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.data.Buffer;
 import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.Glide;
 import net.beadsproject.beads.ugens.WavePlayer;
+import sandbox.models.GameInformation;
+import sandbox.models.GameInformationFrequencies;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -27,10 +30,21 @@ public class Starter {
         snifferThread.start();
         broadcasterThread.start();
 
-        //
-        CRC32 checksumGenerator = new CRC32();
-        checksumGenerator.update(new byte[302]);
-                System.out.println(Integer.toBinaryString((int)checksumGenerator.getValue()));
+/*
+        GameInformation gameInformation = new GameInformation();
+        gameInformation.putVariable(GameInformationFrequencies.APPLE,3);
 
-        }
+        Gson gson = new Gson();
+        String json = gson.toJson(gameInformation,GameInformation.class);
+        System.out.println("Ordinary json:");
+        System.out.println(json);
+        System.out.println("Converted to sound");
+        System.out.println(new GameInformationFrequencies().translateJSONToSound(json));
+
+        CRC32 checksumGenerator = new CRC32();
+        checksumGenerator.update(json.getBytes());
+        System.out.println("Checksum of the json:");
+        System.out.println(Integer.toBinaryString((int)checksumGenerator.getValue()));
+*/
+            }
 }

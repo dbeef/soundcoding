@@ -54,7 +54,9 @@ decimalWavePlayers = new WavePlayer[10];
         if(frequency == (Variables.START_END_FREQUENCY))
             audioContext.out.addInput(start_endWavePlayer);
 
+        synchronized(audioContext) {
             audioContext.start();
+        }
     }
 
     public void stopAudioContext() {

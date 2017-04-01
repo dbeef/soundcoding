@@ -32,6 +32,7 @@ public class Sniffer implements PitchDetectionHandler {
             String name = e.getActionCommand();
             PitchProcessor.PitchEstimationAlgorithm newAlgo = PitchProcessor.PitchEstimationAlgorithm.valueOf(name);
             algo = newAlgo;
+
             try {
                 setNewMixer(currentMixer);
             } catch (LineUnavailableException e1) {
