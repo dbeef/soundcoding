@@ -1,5 +1,6 @@
 package sandbox.output;
 
+import net.beadsproject.beads.core.AudioContext;
 import sandbox.utils.Variables;
 
 /**
@@ -8,10 +9,12 @@ import sandbox.utils.Variables;
 public class Broadcaster {
 
     static SoundWaveGenerator soundWaveGenerator;
+    static AudioContext audioContext;
 
-    public void sendMessage(String message) {
+    public void sendMessage(String message) throws InterruptedException {
 
-        soundWaveGenerator = new SoundWaveGenerator();
+        audioContext = new AudioContext();
+        soundWaveGenerator = new SoundWaveGenerator(audioContext);
 
         /*
         Modulates 'pause' frequency for 10 times MessageInterval seconds, without this chunk of code,
@@ -21,25 +24,17 @@ public class Broadcaster {
 
         long startTime = System.currentTimeMillis();
 
-        Thread t;
         soundWaveGenerator.setFrequency(Variables.START_END_FREQUENCY);
-        t = new Thread(soundWaveGenerator);
-        t.run();
+        soundWaveGenerator.start();
 
-        try {
-            Thread.sleep(Variables.MESSAGE_INTERVAL * 3);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-        soundWaveGenerator.stop();
+        waitFor(Variables.MESSAGE_INTERVAL * 3);
 
-        try {
-            Thread.sleep(Variables.MESSAGE_INTERVAL * 3);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
+        soundWaveGenerator.stopAudioContext();
+        soundWaveGenerator.join();
 
-        //  Here we send every character separated by the 'pause' frequency.
+        soundWaveGenerator = new SoundWaveGenerator(audioContext);
+
+        // Here we send every character separated by the 'pause' frequency.
         // I've created SoundWaveGenerator class because I didn't see any
         // method to generate a soundwave for a particular amount of time, so I run it in
         // a different thread and count time here.
@@ -49,57 +44,38 @@ public class Broadcaster {
             for (int b = 0; b < Variables.DECIMAL_FREQUENCIES.length; b++) {
                 if (Integer.parseInt(Character.toString(message.charAt(a))) == b) {
                     soundWaveGenerator.setFrequency(Variables.DECIMAL_FREQUENCIES[b]);
-                System.out.println("Now " + Variables.DECIMAL_FREQUENCIES[b]);
+                    System.out.println("Now " + Variables.DECIMAL_FREQUENCIES[b]);
                 }
             }
 
-            t.run();
-            while (!soundWaveGenerator.getAudioContext().isRunning()) {
-                try {
-                    Thread.sleep(15);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-            waitFor(Variables.MESSAGE_INTERVAL);
-            soundWaveGenerator.stop();
+            soundWaveGenerator.start();
 
-            while (soundWaveGenerator.getAudioContext().isRunning()) {
-                try {
-                    Thread.sleep(15);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-            }
             waitFor(Variables.MESSAGE_INTERVAL);
+
+            soundWaveGenerator.stopAudioContext();
+            soundWaveGenerator.join();
+
+            soundWaveGenerator = new SoundWaveGenerator(audioContext);
 
             soundWaveGenerator.setFrequency(Variables.PAUSE_FREQUENCY);
-            t.run();
-            while (!soundWaveGenerator.getAudioContext().isRunning()) {
-                try {
-                    Thread.sleep(15);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-            waitFor(Variables.MESSAGE_INTERVAL);
-            soundWaveGenerator.stop();
+            soundWaveGenerator.start();
 
-            while (soundWaveGenerator.getAudioContext().isRunning()) {
-                try {
-                    Thread.sleep(15);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-            }
             waitFor(Variables.MESSAGE_INTERVAL);
+
+            soundWaveGenerator.stopAudioContext();
+            soundWaveGenerator.join();
+
+            soundWaveGenerator = new SoundWaveGenerator(audioContext);
         }
 
         soundWaveGenerator.setFrequency(Variables.START_END_FREQUENCY);
-        t.run();
+        soundWaveGenerator.start();
+
         waitFor(Variables.MESSAGE_INTERVAL * 3);
-        soundWaveGenerator.stop();
-        t.stop();
+
+        soundWaveGenerator.stopAudioContext();
+        soundWaveGenerator.join();
+
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
         System.out.println("Total time of sending the message in (ms): " + totalTime);

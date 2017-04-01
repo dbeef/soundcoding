@@ -49,7 +49,11 @@ public class StarterBroadcaster implements Runnable {
             for (int a = 0; a < s.length(); a++) {
                 System.out.println("Sending " + s.charAt(a));
                 Broadcaster broadcaster = new Broadcaster();
-                broadcaster.sendMessage(Integer.toString((int) s.charAt(a)));
+                try {
+                    broadcaster.sendMessage(Integer.toString((int) s.charAt(a)));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {

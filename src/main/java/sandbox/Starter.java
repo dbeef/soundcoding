@@ -1,10 +1,15 @@
 package sandbox;
 
+import net.beadsproject.beads.core.AudioContext;
+import net.beadsproject.beads.data.Buffer;
+import net.beadsproject.beads.ugens.Gain;
+import net.beadsproject.beads.ugens.Glide;
+import net.beadsproject.beads.ugens.WavePlayer;
+
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.zip.CRC32;
 
 /**
  * Class which is intended to take one character from user's input and send it in binary through sound.
@@ -21,6 +26,11 @@ public class Starter {
 
         snifferThread.start();
         broadcasterThread.start();
+
+        //
+        CRC32 checksumGenerator = new CRC32();
+        checksumGenerator.update(new byte[302]);
+                System.out.println(Integer.toBinaryString((int)checksumGenerator.getValue()));
 
         }
 }

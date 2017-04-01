@@ -8,20 +8,18 @@ import sandbox.utils.Variables;
 /**
  * Class which is intended to generate sound wave of specific frequency.
  */
-public class SoundWaveGenerator implements Runnable {
+public class SoundWaveGenerator extends Thread {
 
     private AudioContext audioContext;
 
-
     private WavePlayer decimalWavePlayers[];
-
     private WavePlayer pauseWavePlayer;
     private WavePlayer start_endWavePlayer;
 
     private int frequency;
 
-    public SoundWaveGenerator() {
-        audioContext = new AudioContext();
+    public SoundWaveGenerator(AudioContext ac) {
+        audioContext = ac;
 decimalWavePlayers = new WavePlayer[10];
         for(int a =0;a<10;a++)
             decimalWavePlayers[a] =  new WavePlayer(audioContext, Variables.DECIMAL_FREQUENCIES[a], Buffer.SINE);
@@ -56,12 +54,10 @@ decimalWavePlayers = new WavePlayer[10];
         if(frequency == (Variables.START_END_FREQUENCY))
             audioContext.out.addInput(start_endWavePlayer);
 
-        audioContext.start();
+            audioContext.start();
     }
 
-    public void stop() {
-        audioContext.stop();
+    public void stopAudioContext() {
         audioContext.out.clearInputConnections();
-    }
+   }
 }
-
