@@ -26,14 +26,15 @@ public class StarterSniffer implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            DetectedMessageFormatter detectedMessageFormatter = new DetectedMessageFormatter(sniffer.getDetectedFrequencies());
-            System.out.println("Formatted: " + detectedMessageFormatter.getFormattedMessage());
-  //          sniffer.getDetectedFrequencies().clear();
-     System.out.println("Separated messages:");
-for(String s : detectedMessageFormatter.getSeparatedMessages()) {
-    System.out.println(s);
-}
+            synchronized (sniffer.getDetectedFrequencies()) {
+                DetectedMessageFormatter detectedMessageFormatter = new DetectedMessageFormatter(sniffer.getDetectedFrequencies());
+                System.out.println("Formatted: " + detectedMessageFormatter.getFormattedMessage());
+                //          sniffer.getDetectedFrequencies().clear();
+                System.out.println("Separated messages:");
+                for (String s : detectedMessageFormatter.getSeparatedMessages()) {
+                    System.out.println(s);
+                }
+            }
         }
     }
 }
