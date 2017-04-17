@@ -18,9 +18,12 @@ public class InputInterpreter implements GestureListener {
     double yTap;
     double zoomDelta;
     boolean deltaChanged;
-
     public InputInterpreter() {
         Gdx.input.setInputProcessor(new GestureDetector(this));
+    }
+
+    public boolean isTouched() {
+    return touched;
     }
 
     public double getZoomDelta() {

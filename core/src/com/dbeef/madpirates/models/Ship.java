@@ -22,7 +22,7 @@ public class Ship {
 	Body shipBody;
 	
 	Sprite shipSprite;
-	static double sailSpeed = 10f;
+	static double sailSpeed = 20f;
 	static double rotationSpeed = 20f;
 	double x;
 	double y;

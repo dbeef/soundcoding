@@ -20,15 +20,17 @@ public class MapBodyBuilder {
     // The pixels per tile. If your tiles are 16x16, this is set to 16f
     private static float ppt = 0;
 
-    public Array<Body> buildShapes(Map map, float pixels, BodiesDatabase bodiesDatabase) {
+    public Array<Body> buildShapes(Map map, float pixels, BodiesDatabase bodiesDatabase, String layerName) {
         ppt = 1;
 
-        MapObjects objects = map.getLayers().get("Islands ").getObjects();
+        System.out.println("started");
+
+        MapObjects objects = map.getLayers().get(layerName).getObjects();
 
         Array<Body> bodies = new Array<Body>();
 
         for(MapObject object : objects) {
-
+            System.out.println("there is object");
             if (object instanceof TextureMapObject) {
                 continue;
             }
@@ -51,12 +53,16 @@ public class MapBodyBuilder {
                 continue;
             }
 
+            FixtureDef f = new FixtureDef();
+            f.restitution = 1;
+            f.density = 1;
+            f.friction = 1;
+            f.shape = shape;
             BodyDef bd = new BodyDef();
             bd.type = BodyDef.BodyType.StaticBody;
-            Body body = bodiesDatabase.getWorld().createBody(bd);
-            body.createFixture(shape, 1);
+            Body body = null;
 
-            bodiesDatabase.add(body);
+            bodiesDatabase.add(body,bd,f);
             System.out.println("added body");
 
             bodies.add(body);
