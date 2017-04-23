@@ -72,11 +72,16 @@ public class DetectedMessageFormatter {
     public String formatMessageInASCII(String formattedMessage) {
         if (!formattedMessage.equals("")) {
 
-            int code = Integer.parseInt(formattedMessage, 10);
+            int code;
+            if(formattedMessage.length() < 5) {
+                code = Integer.parseInt(formattedMessage, 10);
 //2 for binary
-            //10 for decimal string
-            char p = (char) code;
-            formattedMessageInASCII = Character.toString(p);
+                //10 for decimal string
+                char p = (char) code;
+                formattedMessageInASCII = Character.toString(p);
+            }
+            else
+                formattedMessageInASCII = formattedMessage;
             return formattedMessageInASCII;
         } else
             formattedMessageInASCII = "No message detected.";

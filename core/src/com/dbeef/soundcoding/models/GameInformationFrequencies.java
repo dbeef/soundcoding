@@ -17,18 +17,21 @@ public class GameInformationFrequencies {
     public static final String GOLD = "GOLD";
     public static final String SWORD = "SWORD";
 
+    public static final int[] FREQUENCIES = {3950,4000,4050,4100,4150,4200,4300,4250};
+    public static final String[] VALUES = {ARRAY_NAME, PLAYER_POS_X, PLAYER_POS_Y, HITPOINTS,EQUIPMENT,APPLE,GOLD,SWORD};
+
     Map<String, Integer> frequenciesForValues;
 
     public GameInformationFrequencies() {
         frequenciesForValues = new LinkedHashMap<String, Integer>();
-        frequenciesForValues.put(ARRAY_NAME,3950);
-        frequenciesForValues.put(PLAYER_POS_X, 4000);
-        frequenciesForValues.put(PLAYER_POS_Y, 4050);
-        frequenciesForValues.put(HITPOINTS, 4100);
-        frequenciesForValues.put(EQUIPMENT, 4150);
-        frequenciesForValues.put(APPLE, 4200);
-        frequenciesForValues.put(GOLD, 4300);
-        frequenciesForValues.put(SWORD, 4250);
+        frequenciesForValues.put(ARRAY_NAME,4100);
+        frequenciesForValues.put(PLAYER_POS_X, 4200);
+        frequenciesForValues.put(PLAYER_POS_Y, 4300);
+        frequenciesForValues.put(HITPOINTS, 4400);
+        frequenciesForValues.put(EQUIPMENT, 4500);
+        frequenciesForValues.put(APPLE, 4600);
+        frequenciesForValues.put(GOLD, 4700);
+        frequenciesForValues.put(SWORD, 4800);
     }
 
     public int getFrequencyForString(String s) {
@@ -52,13 +55,24 @@ public class GameInformationFrequencies {
     }
 
     public String translateJSONToSound(String json) {
-        for (Map.Entry<String, Integer> entry : frequenciesForValues.entrySet()) {
+       /* for (Map.Entry<String, Integer> entry : frequenciesForValues.entrySet()) {
             String key = entry.getKey();
             Integer value = entry.getValue();
             if (json.contains(key)) {
                 json = json.replace(key, "$" + value + "$");
+            //    json = json.replace(key, "$");
             }
         }
+        */
+       int a =0;
+       for(String value : VALUES){
+           if(json.contains(value)){
+     json =  json.replace(value,"$" + Integer.toString(a));
+           }
+           a++;
+       }
+        System.out.println("Sound-formatted string is " + json);
+
         return json;
     }
     public void translateSoundToJSON(){

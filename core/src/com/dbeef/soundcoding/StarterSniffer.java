@@ -1,10 +1,12 @@
 package com.dbeef.soundcoding;
 
 import com.dbeef.soundcoding.input.Sniffer;
+import com.dbeef.soundcoding.models.DetectedFrequency;
 import com.dbeef.soundcoding.utils.DetectedMessageFormatter;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.util.ArrayList;
 
 /**
  * Created by dbeef on 18.03.17.
@@ -27,7 +29,7 @@ public class StarterSniffer implements Runnable {
                 e.printStackTrace();
             }
             synchronized (sniffer.getDetectedFrequencies()) {
-                DetectedMessageFormatter detectedMessageFormatter = new DetectedMessageFormatter(sniffer.getDetectedFrequencies());
+                DetectedMessageFormatter detectedMessageFormatter = new DetectedMessageFormatter((ArrayList<DetectedFrequency>) sniffer.getDetectedFrequencies().clone());
                 System.out.println("Formatted: " + detectedMessageFormatter.getFormattedMessage());
                 //          sniffer.getDetectedFrequencies().clear();
                 System.out.println("Separated messages:");

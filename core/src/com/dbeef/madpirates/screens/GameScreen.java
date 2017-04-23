@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -19,6 +20,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.bitfire.postprocessing.PostProcessor;
+import com.bitfire.postprocessing.effects.Curvature;
+import com.bitfire.postprocessing.effects.Nfaa;
 import com.dbeef.madpirates.Main;
 import com.dbeef.madpirates.camera.ImprovedCamera;
 import com.dbeef.madpirates.input.InputInterpreter;
@@ -26,6 +30,11 @@ import com.dbeef.madpirates.models.Dot;
 import com.dbeef.madpirates.models.Ship;
 import com.dbeef.madpirates.physics.BodiesDatabase;
 import com.dbeef.madpirates.physics.MapBodyBuilder;
+import com.dbeef.soundcoding.StarterBroadcaster;
+import com.dbeef.soundcoding.StarterSniffer;
+import com.dbeef.soundcoding.models.GameInformation;
+import com.dbeef.soundcoding.models.GameInformationFrequencies;
+import com.google.gson.Gson;
 
 public class GameScreen implements Screen {
 
@@ -35,6 +44,7 @@ public class GameScreen implements Screen {
     private float deltaTime;
     private ParticleEffect pe;
     private TiledMap tiledMap;
+    boolean sniffing = false;
     private OrthogonalTiledMapRenderer tiledMapOrthogonal;
     private BitmapFont font;
     private Sprite mapCrossSprite;
@@ -44,11 +54,18 @@ public class GameScreen implements Screen {
     private Viewport viewport;
     private Box2DDebugRenderer dr;
     private Ship ship;
+    private boolean waitingForInput;
+    private boolean informationRetrieved;
+    Thread broadcasterThread;
     private Ship enemyShip;
     private InputInterpreter iI;
     private BodiesDatabase bodiesDatabase;
     private ImprovedCamera camera;
-   // PostProcessor postProcessor;
+    private OrthographicCamera guiCamera;
+    private StarterBroadcaster broadcaster = new StarterBroadcaster();
+    StarterSniffer sniffer = new StarterSniffer();
+   private Viewport guiViewport;
+    PostProcessor postProcessor;
     public GameScreen(final Main gam) {
 
         this.game = gam;
@@ -68,8 +85,11 @@ public class GameScreen implements Screen {
         mapCrossSprite = new Sprite(mapCross);
         batch = new SpriteBatch();
         camera = new ImprovedCamera(800, 480, 72 * 64,83 * 64, 28*64, 17*64);
+       guiCamera = new OrthographicCamera(800,480);
+
         iI = new InputInterpreter();
         viewport = new FillViewport(800, 480, camera);
+        guiViewport = new FillViewport(800, 480, guiCamera);
 
         bodiesDatabase = new BodiesDatabase();
         dr = new Box2DDebugRenderer();
@@ -100,15 +120,22 @@ public class GameScreen implements Screen {
         b.buildShapes(tiledMap, 64, bodiesDatabase, "Map bounds");
 
 
-     //   postProcessor = new PostProcessor( false, false, true );
-       // Curvature bloom = new Curvature();
+        postProcessor = new PostProcessor( false, false, true );
+        Curvature c = new com.bitfire.postprocessing.effects.Curvature();
+        c.setDistortion(0.5f);
+        postProcessor.addEffect(c);
+
+        Thread snifferThread = new Thread(sniffer);
+        snifferThread.setPriority(Thread.MAX_PRIORITY);
+        snifferThread.start();
+        broadcasterThread = new Thread(broadcaster);
     }
+
 
     @Override
     public void render(float delta) {
 
         deltaTime = Gdx.graphics.getDeltaTime();
-
         camera.takeZoomDelta(iI.getZoomDelta());
 
         if (iI.isTouched()) {
@@ -117,11 +144,32 @@ public class GameScreen implements Screen {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
-            simulationTime = 3;
+        if(simulationTime == 0)
+         waitingForInput = true;
+         //   simulationTime = 3;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
+         if(!broadcasterThread.isAlive()) {
+             broadcasterThread = new Thread(broadcaster);
+             GameInformation information = new GameInformation();
+
+             information.putVariable(GameInformationFrequencies.PLAYER_POS_X, (int) bodiesDatabase.getBodies().get(0).getPosition().x);
+             information.putVariable(GameInformationFrequencies.PLAYER_POS_Y, (int) bodiesDatabase.getBodies().get(0).getPosition().y);
+
+             Gson gson = new Gson();
+             String json = gson.toJson(information);
+             GameInformationFrequencies gameInformationFrequencies = new GameInformationFrequencies();
+            json =  gameInformationFrequencies.translateJSONToSound(json);
+             broadcaster.setMessage(json);
+             broadcasterThread.start();
+         }
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
             camera.takeZoomDelta(deltaTime);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+        sniffing = !sniffing;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.X)) {
             camera.takeZoomDelta(-deltaTime);
@@ -139,7 +187,7 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
 
-      //  postProcessor.capture();
+        postProcessor.capture();
         tiledMapOrthogonal.setView(camera);
         tiledMapOrthogonal.render();
         batch.begin();
@@ -168,9 +216,25 @@ public class GameScreen implements Screen {
         ship.render(batch, delta);
         enemyShip.render(batch, delta);
 
+        batch.setProjectionMatrix(guiCamera.combined);
+
+        if(waitingForInput != true) {
+            if (simulationTime == 0)
+                font.draw(batch, "Tura planowania. P by zakończyc ture.", 130, 220);
+            else
+                font.draw(batch, "Tura symulacji.", 130, 220);
+        }
+        else
+        {
+            font.draw(batch, "Oczekiwanie na informacje od drugiego gracza", 30, 220);
+            font.draw(batch, "Wcisnij G aby rozeslac informacje", 30, 180);
+            font.draw(batch, "Wcisnij L aby nasluchiwac informacje", 30, 140);
+            font.draw(batch, "Nasluchiwanie informacji: " + sniffing, 30, 100);
+        }
+
         batch.end();
 
-    //    postProcessor.render();
+        postProcessor.render();
         if (simulationTime > 0) {
             simulationTime -= deltaTime;
             if (simulationTime < 0)

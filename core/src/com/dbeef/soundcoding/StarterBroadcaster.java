@@ -1,5 +1,6 @@
 package com.dbeef.soundcoding;
 
+import com.dbeef.soundcoding.models.GameInformationFrequencies;
 import com.dbeef.soundcoding.output.Broadcaster;
 
 import java.io.BufferedReader;
@@ -10,6 +11,9 @@ import java.io.InputStreamReader;
  * Created by dbeef on 18.03.17.
  */
 public class StarterBroadcaster implements Runnable {
+
+    private String message;
+
     private static int takeInput() throws IOException {
 
         String input = readString();
@@ -34,23 +38,35 @@ public class StarterBroadcaster implements Runnable {
         return s;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public void run() {
-        while (true) {
-            String s = null;
-            try {
-                s = readString();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            String s = message;
 
             long startTime = System.currentTimeMillis();
 
             for (int a = 0; a < s.length(); a++) {
-                System.out.println("Sending " + s.charAt(a));
+
+                String tempMessage = null;
+
+                if (a > 0 && message.charAt(a) == '$') {
+                    tempMessage = "$" + message.charAt(a+1);
+                a++;
+                }
+
                 Broadcaster broadcaster = new Broadcaster();
+
                 try {
-                    broadcaster.sendMessage(Integer.toString((int) s.charAt(a)));
+                    if(tempMessage == null) {
+                        broadcaster.sendMessage(Integer.toString((int) s.charAt(a)));
+                    }
+                    else {
+                        System.out.println("Sending " + tempMessage);
+                        broadcaster.sendMessage(tempMessage);
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -66,4 +82,3 @@ public class StarterBroadcaster implements Runnable {
             System.out.println("Total time of sending whole message in (ms): " + totalTime);
         }
     }
-}

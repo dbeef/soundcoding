@@ -10,10 +10,15 @@ public class GameInformation {
 
     Map<String, Integer> variablesAndValues;
 
-    public GameInformation(){
+    public GameInformation() {
         variablesAndValues = new LinkedHashMap<String, Integer>();
     }
-    public void putVariable(String variable, int value){
-        variablesAndValues.put(variable,value);
+
+    public Map<String, Integer> getVariablesAndValues() {
+        return variablesAndValues;
+    }
+
+    public void putVariable(String variable, int value) {
+        variablesAndValues.put(variable + ";" + variablesAndValues.size(), value);
     }
 }

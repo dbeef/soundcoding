@@ -20,6 +20,15 @@ public class DetectedFrequency {
                 matchedSign = Integer.toString(a);
             }
         }
+
+        for (int a = 0; a < GameInformationFrequencies.FREQUENCIES.length; a++) {
+            if (detectedFrequency > GameInformationFrequencies.FREQUENCIES[a] - Variables.TOLERANCE && detectedFrequency < GameInformationFrequencies.FREQUENCIES[a] +
+                    Variables.TOLERANCE) {
+                matchedFrequency = GameInformationFrequencies.FREQUENCIES[a];
+                matchedSign = GameInformationFrequencies.VALUES[a];
+            }
+        }
+
         if (matchedSign == null) {
             if (detectedFrequency > Variables.PAUSE_FREQUENCY - Variables.TOLERANCE && detectedFrequency < Variables.PAUSE_FREQUENCY +
                     Variables.TOLERANCE) {
