@@ -1,6 +1,8 @@
 package com.dbeef.soundcoding.utils;
 
 import com.dbeef.soundcoding.models.DetectedFrequency;
+import com.dbeef.soundcoding.models.GameInformation;
+import com.dbeef.soundcoding.models.GameInformationFrequencies;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,33 @@ public class DetectedMessageFormatter {
         if (detectedMessage.length() > 0) {
             formatMessage(detectedMessage);
             //    formatMessageInASCII();
+        }
+
+        formatSpecialMessages();
+    }
+    private void formatSpecialMessages(){
+        System.out.println("formattingSpecialMessage");
+        GameInformationFrequencies gameInformationFrequencies = new GameInformationFrequencies();
+
+        //https://stackoverflow.com/questions/15844443/why-java-foreach-doesnt-change-element-value
+
+        for(String specialVariable : gameInformationFrequencies.ALL_SPECIAL_VARIABLES)
+        {
+            //źle! to tylko odczyt
+           /*
+            for(String message : separatedMessages){
+                if(message.contains(specialVariable)) {
+                    message = specialVariable;
+              System.out.println("message: " + message);
+              System.out.println("special variable: " + specialVariable);
+                }
+            }
+            */
+           for(int a =0;a<separatedMessages.size();a++) {
+               if (separatedMessages.get(a).contains(specialVariable)) {
+                   separatedMessages.set(a,specialVariable);
+               }
+           }
         }
     }
 

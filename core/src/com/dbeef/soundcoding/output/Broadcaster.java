@@ -1,42 +1,35 @@
 package com.dbeef.soundcoding.output;
 
-import com.dbeef.soundcoding.models.GameInformation;
 import com.dbeef.soundcoding.models.GameInformationFrequencies;
+import com.dbeef.soundcoding.utils.FileRecorder;
 import com.dbeef.soundcoding.utils.Variables;
-import com.google.gson.Gson;
 import net.beadsproject.beads.core.AudioContext;
+
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 /**
  * Created by dbeef on 18.03.17.
  */
 public class Broadcaster {
 
-    static SoundWaveGenerator soundWaveGenerator;
-    static AudioContext audioContext;
+    private LinkedList<String> fileNames;
+    private static AudioContext audioContext;
 
-    public void sendMessage(String message) throws InterruptedException {
+    public void sendMessage(String message, int index, LinkedList<String> fileNames) throws InterruptedException {
         System.out.println("in broadcaster. Message is " + message);
 
-            audioContext = new AudioContext();
-            soundWaveGenerator = new SoundWaveGenerator(audioContext);
-
-        /*
-        Modulates 'pause' frequency for 10 times MessageInterval seconds, without this chunk of code,
-        first character of message to send would be omitted (for an unknown reason,
-        my suggestion is that calling an audio interface for the first time takes too much time).
-        */
+        final AudioContext ac = new AudioContext();
 
         long startTime = System.currentTimeMillis();
 
-        soundWaveGenerator.setFrequency(Variables.START_END_FREQUENCY);
-        soundWaveGenerator.start();
+  FileRecorder fileRecorder = new FileRecorder();
 
-        waitFor(Variables.MESSAGE_INTERVAL * 3);
+  fileRecorder.record(ac, index + "A", Variables.START_END_FREQUENCY);
 
-        soundWaveGenerator.stopAudioContext();
-        soundWaveGenerator.join();
+  fileNames.add(index + "A");
 
-        soundWaveGenerator = new SoundWaveGenerator(audioContext);
+  int freq = 0;
 
         // Here we send every character separated by the 'pause' frequency.
         // I've created SoundWaveGenerator class because I didn't see any
@@ -51,46 +44,38 @@ public class Broadcaster {
 
                 if (a > 0 && message.charAt(a - 1) == '$') {
 
-                    soundWaveGenerator.setFrequency((GameInformationFrequencies.FREQUENCIES[Integer.parseInt(Character.toString(message.charAt(a)))]));
+                    freq = ((GameInformationFrequencies.FREQUENCIES[Integer.parseInt(Character.toString(message.charAt(a)))]));
 
                     System.out.println("I see special variable here. Setting: " + (GameInformationFrequencies.FREQUENCIES[Integer.parseInt(Character.toString(message.charAt(a)))]));
 
                 } else if(!message.contains("$"))
            for (int b = 0; b < Variables.DECIMAL_FREQUENCIES.length; b++) {
                         if (Character.toString(message.charAt(a)).equals(Integer.toString(b))) {
-                            soundWaveGenerator.setFrequency(Variables.DECIMAL_FREQUENCIES[b]);
+                            freq = (Variables.DECIMAL_FREQUENCIES[b]);
                             System.out.println("Now " + Variables.DECIMAL_FREQUENCIES[b]);
                         }
                     }
 
-                soundWaveGenerator.start();
+                fileRecorder.record(ac, index + "A" + a, freq);
+                fileNames.add(index + "A" + a);
 
-                waitFor(Variables.MESSAGE_INTERVAL);
+                while(ac.isRunning()){
+                    Thread.sleep((50));
+                }
+                fileRecorder.record(ac,index + "B" + a, Variables.PAUSE_FREQUENCY);
+                fileNames.add(index + "B" + a);
 
-                soundWaveGenerator.stopAudioContext();
-                soundWaveGenerator.join();
-
-                soundWaveGenerator = new SoundWaveGenerator(audioContext);
-
-                soundWaveGenerator.setFrequency(Variables.PAUSE_FREQUENCY);
-                soundWaveGenerator.start();
-
-                waitFor(Variables.MESSAGE_INTERVAL);
-
-                soundWaveGenerator.stopAudioContext();
-                soundWaveGenerator.join();
-
-                soundWaveGenerator = new SoundWaveGenerator(audioContext);
+                while(ac.isRunning()){
+                    Thread.sleep((50));
+                }
             }
 
-            soundWaveGenerator.setFrequency(Variables.START_END_FREQUENCY);
-            soundWaveGenerator.start();
+        fileRecorder.record(ac,index + "C", Variables.START_END_FREQUENCY);
+            fileNames.add(index + "C");
 
-            waitFor(Variables.MESSAGE_INTERVAL * 3);
-
-            soundWaveGenerator.stopAudioContext();
-            soundWaveGenerator.join();
-
+        while(ac.isRunning()){
+            Thread.sleep((50));
+        }
             long endTime = System.currentTimeMillis();
             long totalTime = endTime - startTime;
             System.out.println("Total time of sending the message in (ms): " + totalTime);

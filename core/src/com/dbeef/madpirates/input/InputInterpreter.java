@@ -5,6 +5,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.dbeef.madpirates.physics.BodiesDatabase;
 
 /**
  * From: https://github.com/libgdx/libgdx/wiki/Gesture-detection
@@ -18,7 +19,7 @@ public class InputInterpreter implements GestureListener {
     double yTap;
     double zoomDelta;
     boolean deltaChanged;
-    public InputInterpreter() {
+    public InputInterpreter( ) {
         Gdx.input.setInputProcessor(new GestureDetector(this));
     }
 

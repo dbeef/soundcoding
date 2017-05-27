@@ -19,6 +19,6 @@ public class GameInformation {
     }
 
     public void putVariable(String variable, int value) {
-        variablesAndValues.put(variable + ";" + variablesAndValues.size(), value);
+        variablesAndValues.put(variable, value);
     }
 }

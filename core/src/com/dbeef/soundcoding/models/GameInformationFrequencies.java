@@ -17,10 +17,12 @@ public class GameInformationFrequencies {
     public static final String GOLD = "GOLD";
     public static final String SWORD = "SWORD";
 
-    public static final int[] FREQUENCIES = {3950,4000,4050,4100,4150,4200,4300,4250};
+    public static String ALL_SPECIAL_VARIABLES[] = {ARRAY_NAME, PLAYER_POS_X, PLAYER_POS_Y, HITPOINTS, EQUIPMENT, APPLE, SWORD, GOLD};
+
+    public static final int[] FREQUENCIES = {3900,4100,4200,4300,4400,4500,4600,4700};
     public static final String[] VALUES = {ARRAY_NAME, PLAYER_POS_X, PLAYER_POS_Y, HITPOINTS,EQUIPMENT,APPLE,GOLD,SWORD};
 
-    Map<String, Integer> frequenciesForValues;
+    public Map<String, Integer> frequenciesForValues;
 
     public GameInformationFrequencies() {
         frequenciesForValues = new LinkedHashMap<String, Integer>();

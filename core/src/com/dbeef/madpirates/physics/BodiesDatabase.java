@@ -1,6 +1,8 @@
 package com.dbeef.madpirates.physics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -8,19 +10,34 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dbeef.madpirates.models.Dot;
+import com.dbeef.madpirates.models.Ship;
 
 import java.util.ArrayList;
 
 public class BodiesDatabase {
 
     public static final float FPSCAP = 1 / 60F;
+
+    public Ship getPlayerShip() {
+        return playerShip;
+    }
+
+    public void setPlayerShip(Ship playerShip) {
+        this.playerShip = playerShip;
+    }
+
+    public Ship getEnemyShip() {
+        return enemyShip;
+    }
+
+    public void setEnemyShip(Ship enemyShip) {
+        this.enemyShip = enemyShip;
+    }
+
+    Ship playerShip;
+    Ship enemyShip;
     float shipSailingSpeed;
     float shipManouverSpeed;
-    float destinatedX;
-    float destinatedY;
-    float destinatedAngle;
-    float pointsX;
-    float pointsY;
     float timerDot = 0;
     boolean loaded = false;
     World world;
@@ -33,7 +50,10 @@ public class BodiesDatabase {
     private float accumulator = 0;
     private float alternateAccumulator = 0;
     private float alternativeWorldTimer = 0;
+
     public BodiesDatabase() {
+        this.playerShip = playerShip;
+        this.enemyShip = enemyShip;
         // Create a physics world, the heart of the simulation.  The Vector
         //passed in is gravity
         world = new World(new Vector2(0, 0f), false);
@@ -47,6 +67,22 @@ public class BodiesDatabase {
 
         alternativeBodies = new ArrayList<Body>();
         alternativeWorld = new World(new Vector2(0, 0f), false);
+    }
+
+    public void drawTrajectory(Batch batch, Sprite cross) {
+        float a = 0;
+        for (Dot dot : this.getDots()) {
+            cross.setRotation((float) Math.toDegrees(dot.getAngle()));
+            cross.setPosition(dot.getX() - 30, dot.getY() - 30);
+
+            if (a != 1) {
+                cross.setColor(1, 1, 1, 1 - a);
+                cross.draw(batch);
+            }
+            a += 0.0025f;
+            if (a > 1)
+                a = 1;
+        }
     }
 
     public World getAlternativeWorld() {
@@ -81,47 +117,24 @@ public class BodiesDatabase {
         if (alternativeWorldTimer > 0.2f) {
             alternativeWorldTimer = 0;
             alternateAccumulator += 3f;
-                while (alternateAccumulator > FPSCAP) {
-                    alternativeWorld.step(FPSCAP, 10, 10);
-                    alternateAccumulator -= FPSCAP;
+            while (alternateAccumulator > FPSCAP) {
+                alternativeWorld.step(FPSCAP, 10, 10);
+                alternateAccumulator -= FPSCAP;
 
-                    float bodyAngle = alternativeBodies.get(0).getAngle();
+                simulateShip(playerShip, 0, alternativeBodies);
+                simulateShip(enemyShip, 1, alternativeBodies);
 
-                    float linearVelocityX = (float) Math.cos(bodyAngle + 1.45f) * shipSailingSpeed;
-                    float linearVelocityY = (float) Math.sin(bodyAngle + 1.45f) * shipSailingSpeed;
-                    Vector2 linearVelocity = alternativeBodies.get(0).getLinearVelocity();
-
-                    if (bodyAngle < destinatedAngle) {
-                        alternativeBodies.get(0).setAngularVelocity(0.55f);
-                        alternativeBodies.get(0).setLinearVelocity(linearVelocity.x + linearVelocityX, linearVelocity.y + linearVelocityY);
+                timerDot += FPSCAP;
+                if (timerDot > 1f) {
+                    for (Body body : alternativeBodies) {
+                        dots.add(new Dot(body.getPosition().x, body.getPosition().y, body.getAngle()));
                     }
-
-                    if (bodyAngle > destinatedAngle - 0.1f && bodyAngle < destinatedAngle + 0.1f) {
-                        alternativeBodies.get(0).setAngularVelocity(0f);
-                        //		this.get(0).setLinearVelocity(0,0);
-                    }
-
-                    if (bodyAngle > destinatedAngle) {
-                        alternativeBodies.get(0).setAngularVelocity(-1 * 0.55f);
-                        alternativeBodies.get(0).setLinearVelocity(linearVelocity.x + linearVelocityX, linearVelocity.y + linearVelocityY);
-
-                    }
-                    if (bodyAngle < destinatedAngle - 0.1f && bodyAngle > destinatedAngle + 0.1f) {
-                        alternativeBodies.get(0).setAngularVelocity(0f);
-                        //		this.get(0).setLinearVelocity(0,0);
-                    }
-
-                    timerDot += FPSCAP;
-                    if (timerDot > 1f) {
-                        for (Body body : alternativeBodies) {
-                            dots.add(new Dot(body.getPosition().x, body.getPosition().y, body.getAngle()));
-                        }
-                 timerDot = 0;
-                    }
+                    timerDot = 0;
                 }
-                //
             }
+            //
         }
+    }
 
 
     public ArrayList<Body> getBodies() {
@@ -185,36 +198,13 @@ public class BodiesDatabase {
             world.step(FPSCAP, 6, 2);
             accumulator -= FPSCAP;
 
-            float bodyAngle = bodies.get(0).getAngle();
+            simulateShip(playerShip, 0, bodies);
+            simulateShip(enemyShip, 1,bodies);
 
-            float linearVelocityX = (float) Math.cos(bodyAngle + 1.45f) * shipSailingSpeed;
-            float linearVelocityY = (float) Math.sin(bodyAngle + 1.45f) * shipSailingSpeed;
-            Vector2 linearVelocity = bodies.get(0).getLinearVelocity();
-
-
-            if (bodyAngle < destinatedAngle) {
-                bodies.get(0).setAngularVelocity(0.55f);
-                bodies.get(0).setLinearVelocity(linearVelocity.x + linearVelocityX, linearVelocity.y + linearVelocityY);
-            }
-
-            if (bodyAngle > destinatedAngle - 0.1f && bodyAngle < destinatedAngle + 0.1f) {
-                bodies.get(0).setAngularVelocity(0f);
-                //		this.get(0).setLinearVelocity(0,0);
-            }
-
-            if (bodyAngle > destinatedAngle) {
-                bodies.get(0).setAngularVelocity(-1 * 0.55f);
-                bodies.get(0).setLinearVelocity(linearVelocity.x + linearVelocityX, linearVelocity.y + linearVelocityY);
-
-            }
-            if (bodyAngle < destinatedAngle - 0.1f && bodyAngle > destinatedAngle + 0.1f) {
-                bodies.get(0).setAngularVelocity(0f);
-                //		this.get(0).setLinearVelocity(0,0);
-            }
         }
     }
 
-    public float sideToRotate(float mouseX, float mouseY) {
+    public float playerSideToRotate(float mouseX, float mouseY) {
 
         //Trigonometry, we've got mouse position and ship position
         //We want an angle between X axis and mouse click location
@@ -225,18 +215,39 @@ public class BodiesDatabase {
         toTarget.x = clickedPoint.x - bodies.get(0).getPosition().x;
         toTarget.y = clickedPoint.y - bodies.get(0).getPosition().y;
 
-        destinatedAngle = MathUtils.atan2(-toTarget.x, toTarget.y);
+        playerShip.setDestinatedAngle(MathUtils.atan2(-toTarget.x, toTarget.y));
+        playerShip.setDestinatedX(mouseX);
+        playerShip.setDestinatedY(mouseY);
 
-        destinatedX = mouseX;
-        destinatedY = mouseY;
-
-
-        pointsX = destinatedX - bodies.get(0).getPosition().x;
-        pointsY = destinatedY - bodies.get(0).getPosition().y;
+        playerShip.setPointsX(playerShip.getDestinatedX() - bodies.get(0).getPosition().x);
+        playerShip.setPointsY(playerShip.getDestinatedY() - bodies.get(0).getPosition().y);
 
 //Now we've got destinatedAngle in radians
 
-        return ((float) destinatedAngle);
+        return ((float) playerShip.getDestinatedAngle());
+    }
+
+    public float enemySideToRotate(float mouseX, float mouseY) {
+
+        //Trigonometry, we've got mouse position and ship position
+        //We want an angle between X axis and mouse click location
+
+        Vector2 clickedPoint = new Vector2();
+        clickedPoint.set((int) mouseX, (int) mouseY);
+        Vector2 toTarget = new Vector2();
+        toTarget.x = clickedPoint.x - bodies.get(1).getPosition().x;
+        toTarget.y = clickedPoint.y - bodies.get(1).getPosition().y;
+
+        enemyShip.setDestinatedAngle(MathUtils.atan2(-toTarget.x, toTarget.y));
+        enemyShip.setDestinatedX(mouseX);
+        enemyShip.setDestinatedY(mouseY);
+
+        enemyShip.setPointsX(enemyShip.getDestinatedX() - bodies.get(1).getPosition().x);
+        enemyShip.setPointsY(enemyShip.getDestinatedY() - bodies.get(1).getPosition().y);
+
+//Now we've got destinatedAngle in radians
+
+        return ((float) enemyShip.getDestinatedAngle());
     }
 
     public void getShipCharacteristics(float sS, float mS) {
@@ -250,5 +261,35 @@ public class BodiesDatabase {
 
     public World getWorld() {
         return world;
+    }
+
+    private void simulateShip(Ship ship, int index, ArrayList<Body> b) {
+
+        float bodyAngle = b.get(index).getAngle();
+
+        float linearVelocityX = (float) Math.cos(bodyAngle + 1.45f) * shipSailingSpeed;
+        float linearVelocityY = (float) Math.sin(bodyAngle + 1.45f) * shipSailingSpeed;
+
+        Vector2 linearVelocity = b.get(index).getLinearVelocity();
+
+        if (bodyAngle < ship.getDestinatedAngle()) {
+            b.get(index).setAngularVelocity(0.55f);
+            b.get(index).setLinearVelocity(linearVelocity.x + linearVelocityX, linearVelocity.y + linearVelocityY);
+        }
+
+        if (bodyAngle > ship.getDestinatedAngle() - 0.1f && bodyAngle < ship.getDestinatedAngle() + 0.1f) {
+            b.get(index).setAngularVelocity(0f);
+            //		this.get(0).setLinearVelocity(0,0);
+        }
+
+        if (bodyAngle > ship.getDestinatedAngle()) {
+            b.get(index).setAngularVelocity(-1 * 0.55f);
+            b.get(index).setLinearVelocity(linearVelocity.x + linearVelocityX, linearVelocity.y + linearVelocityY);
+
+        }
+        if (bodyAngle < ship.getDestinatedAngle() - 0.1f && bodyAngle > ship.getDestinatedAngle() + 0.1f) {
+            b.get(index).setAngularVelocity(0f);
+            //		this.get(0).setLinearVelocity(0,0);
+        }
     }
 }
