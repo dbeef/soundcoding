@@ -62,12 +62,14 @@ public class GameScreen implements Screen {
         */
         //tu przypisać obiekty z file loadera
 
+
+        iI = new InputInterpreter();
         fileLoader = new FileLoader();
 
 
         soundifiedJsonDecoder = new SoundifiedJsonDecoder("");
         soundifiedJsonDecoderThread = new Thread(soundifiedJsonDecoder);
-        keyboardInterpreter = new KeyboardInterpreter(sniffer, soundifiedJsonDecoder);
+        keyboardInterpreter = new KeyboardInterpreter(sniffer, soundifiedJsonDecoder, iI);
 
         cross = new Sprite(fileLoader.getMapCross());
         batch = new SpriteBatch();
@@ -109,8 +111,6 @@ public class GameScreen implements Screen {
         bodiesDatabase.setPlayerShip(playerShip);
         bodiesDatabase.setEnemyShip(enemyShip);
 
-
-        iI = new InputInterpreter();
 
         bodiesDatabase.add(playerShip.getBody(), playerShip.getBodyDef(), playerShip.getFixtureDef());
 
@@ -198,14 +198,15 @@ public class GameScreen implements Screen {
 
         if (iI.touched == true) {
             Vector3 temp = new Vector3();
-            temp.x = (float) iI.getXTap();
-            temp.y = (float) iI.getYTap();
+            temp.x = (int) iI.getXTap();
+            temp.y = (int) iI.getYTap();
             camera.unproject(temp);
             bodiesDatabase.playerSideToRotate(temp.x, temp.y);
         }
         if(soundifiedJsonDecoder.isJsonParsedSuccessfully()){
+            System.out.println("Teraz ustawiam pozycje posx i posy myszki przeciwnika");
             Vector3 temp = new Vector3();
-            temp.x =  (soundifiedJsonDecoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_X));
+            temp.x = (soundifiedJsonDecoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_X));
             temp.y =  (soundifiedJsonDecoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_Y));
             camera.unproject(temp);
             bodiesDatabase.enemySideToRotate(temp.x, temp.y);

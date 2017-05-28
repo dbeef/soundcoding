@@ -21,7 +21,8 @@ public class KeyboardInterpreter {
     private StarterBroadcaster starterBroadcaster;
     private Thread broadcasterThread;
     private StarterSniffer starterSniffer;
-    public KeyboardInterpreter(StarterSniffer starterSniffer, SoundifiedJsonDecoder soundifiedJsonDecoder) {
+    private InputInterpreter inputInterpreter;
+    public KeyboardInterpreter(StarterSniffer starterSniffer, SoundifiedJsonDecoder soundifiedJsonDecoder, InputInterpreter iI) {
         inputModel = new InputModel();
         this.starterSniffer = starterSniffer;
         decoder = soundifiedJsonDecoder;
@@ -92,8 +93,8 @@ public class KeyboardInterpreter {
                 broadcasterThread = new Thread(starterBroadcaster);
                 GameInformation information = new GameInformation();
 
-                information.putVariable(GameInformationFrequencies.PLAYER_POS_X, (int) bodiesDatabase.getBodies().get(0).getPosition().x);
-                information.putVariable(GameInformationFrequencies.PLAYER_POS_Y, (int) bodiesDatabase.getBodies().get(0).getPosition().y);
+                information.putVariable(GameInformationFrequencies.PLAYER_POS_X, (int) iI.getXTap());
+                information.putVariable(GameInformationFrequencies.PLAYER_POS_Y, (int) iI.getYTap());
 
                 Gson gson = new Gson();
                 String json = gson.toJson(information);

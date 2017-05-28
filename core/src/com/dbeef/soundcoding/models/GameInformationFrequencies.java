@@ -26,9 +26,9 @@ public class GameInformationFrequencies {
 
     public GameInformationFrequencies() {
         frequenciesForValues = new LinkedHashMap<String, Integer>();
-        frequenciesForValues.put(ARRAY_NAME,4100);
-        frequenciesForValues.put(PLAYER_POS_X, 4200);
-        frequenciesForValues.put(PLAYER_POS_Y, 4300);
+        frequenciesForValues.put(ARRAY_NAME,3600);
+        frequenciesForValues.put(PLAYER_POS_X, 3800);
+        frequenciesForValues.put(PLAYER_POS_Y, 4000);
         frequenciesForValues.put(HITPOINTS, 4400);
         frequenciesForValues.put(EQUIPMENT, 4500);
         frequenciesForValues.put(APPLE, 4600);
