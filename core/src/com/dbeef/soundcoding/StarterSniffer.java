@@ -15,6 +15,7 @@ public class StarterSniffer implements Runnable {
     private boolean sniffing;
     private String message;
     private Sniffer sniffer;
+
     public void setSniffing(boolean sniffing) {
         this.sniffing = sniffing;
     }
@@ -25,7 +26,7 @@ public class StarterSniffer implements Runnable {
 
     @Override
     public void run() {
-         sniffer = null;
+        sniffer = null;
         try {
             sniffer = new Sniffer();
         } catch (LineUnavailableException e) {
@@ -44,23 +45,20 @@ public class StarterSniffer implements Runnable {
                 DetectedMessageFormatter detectedMessageFormatter = new DetectedMessageFormatter((ArrayList<DetectedFrequency>) sniffer.getDetectedFrequencies().clone());
 
                 System.out.println("Formatted: " + detectedMessageFormatter.getFormattedMessage());
-                //          sniffer.getDetectedFrequencies().clear();
+
                 System.out.println("Separated messages:");
                 message = "";
-    //            if (!sniffing) {
-      //              detectedMessageFormatter.setFormattedMessage("");
-        //            detectedMessageFormatter.setMessage("");
-          //      }
-                //TODO
-                //Połączyć to z broadcasterem
                 for (String s : detectedMessageFormatter.getSeparatedMessages()) {
                     System.out.println(s);
                     message += s;
                 }
+                message = message.replaceAll("No message detected.", "");
+                message = detectedMessageFormatter.getExperiment();
             }
         }
     }
-    public void clearDetectedMessages(){
+
+    public void clearDetectedMessages() {
         sniffer.getDetectedFrequencies().clear();
     }
 }

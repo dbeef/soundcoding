@@ -11,29 +11,25 @@ public class GameInformationFrequencies {
     public static final String ARRAY_NAME = "variablesAndValues";
     public static final String PLAYER_POS_X = "PLAYER_POS_X";
     public static final String PLAYER_POS_Y = "PLAYER_POS_Y";
-    public static final String HITPOINTS = "HITPOINTS";
-    public static final String EQUIPMENT = "EQUIPMENT";
-    public static final String APPLE = "APPLE";
-    public static final String GOLD = "GOLD";
-    public static final String SWORD = "SWORD";
-
-    public static String ALL_SPECIAL_VARIABLES[] = {ARRAY_NAME, PLAYER_POS_X, PLAYER_POS_Y, HITPOINTS, EQUIPMENT, APPLE, SWORD, GOLD};
-
-    public static final int[] FREQUENCIES = {3900,4100,4200,4300,4400,4500,4600,4700};
-    public static final String[] VALUES = {ARRAY_NAME, PLAYER_POS_X, PLAYER_POS_Y, HITPOINTS,EQUIPMENT,APPLE,GOLD,SWORD};
-
+    public static final String LEFT_BRACKET = ",";
+    public static final String RIGHT_BRACKET = "}";
+    public static final String COLON = ":";
+    public static final String QUOTE = "\"";
+    public static final String COMMA = "{";
+    public static final int[] FREQUENCIES = {750, 800, 850, 900, 950, 1000, 1050, 1100};
+    public static String ALL_SPECIAL_VARIABLES[] = {ARRAY_NAME, PLAYER_POS_X, PLAYER_POS_Y, LEFT_BRACKET, RIGHT_BRACKET, COLON, QUOTE, COMMA};
     public Map<String, Integer> frequenciesForValues;
 
     public GameInformationFrequencies() {
         frequenciesForValues = new LinkedHashMap<String, Integer>();
-        frequenciesForValues.put(ARRAY_NAME,3600);
-        frequenciesForValues.put(PLAYER_POS_X, 3800);
-        frequenciesForValues.put(PLAYER_POS_Y, 4000);
-        frequenciesForValues.put(HITPOINTS, 4400);
-        frequenciesForValues.put(EQUIPMENT, 4500);
-        frequenciesForValues.put(APPLE, 4600);
-        frequenciesForValues.put(GOLD, 4700);
-        frequenciesForValues.put(SWORD, 4800);
+        frequenciesForValues.put(ALL_SPECIAL_VARIABLES[0], FREQUENCIES[0]);
+        frequenciesForValues.put(ALL_SPECIAL_VARIABLES[1], FREQUENCIES[1]);
+        frequenciesForValues.put(ALL_SPECIAL_VARIABLES[2], FREQUENCIES[2]);
+        frequenciesForValues.put(ALL_SPECIAL_VARIABLES[3], FREQUENCIES[3]);
+        frequenciesForValues.put(ALL_SPECIAL_VARIABLES[4], FREQUENCIES[4]);
+        frequenciesForValues.put(ALL_SPECIAL_VARIABLES[5], FREQUENCIES[5]);
+        frequenciesForValues.put(ALL_SPECIAL_VARIABLES[6], FREQUENCIES[6]);
+        frequenciesForValues.put(ALL_SPECIAL_VARIABLES[7], FREQUENCIES[7]);
     }
 
     public int getFrequencyForString(String s) {
@@ -57,27 +53,18 @@ public class GameInformationFrequencies {
     }
 
     public String translateJSONToSound(String json) {
-       /* for (Map.Entry<String, Integer> entry : frequenciesForValues.entrySet()) {
-            String key = entry.getKey();
-            Integer value = entry.getValue();
-            if (json.contains(key)) {
-                json = json.replace(key, "$" + value + "$");
-            //    json = json.replace(key, "$");
+        int a = 0;
+        for (String value : ALL_SPECIAL_VARIABLES) {
+            if (json.contains(value)) {
+                json = json.replace(value, "$" + Integer.toString(a));
             }
+            a++;
         }
-        */
-       int a =0;
-       for(String value : VALUES){
-           if(json.contains(value)){
-     json =  json.replace(value,"$" + Integer.toString(a));
-           }
-           a++;
-       }
         System.out.println("Sound-formatted string is " + json);
-
         return json;
     }
-    public void translateSoundToJSON(){
+
+    public void translateSoundToJSON() {
         // TODO: 01.04.17  
     }
 }

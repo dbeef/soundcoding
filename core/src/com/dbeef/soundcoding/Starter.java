@@ -10,7 +10,6 @@ import java.io.IOException;
 public class Starter {
     public static void main(String[] args) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
 
-
         StarterBroadcaster starterBroadcaster = new StarterBroadcaster();
         StarterSniffer starterSniffer = new StarterSniffer();
 
@@ -19,22 +18,5 @@ public class Starter {
 
         snifferThread.start();
         broadcasterThread.start();
-
-/*
-        GameInformation gameInformation = new GameInformation();
-        gameInformation.putVariable(GameInformationFrequencies.APPLE,3);
-
-        Gson gson = new Gson();
-        String json = gson.toJson(gameInformation,GameInformation.class);
-        System.out.println("Ordinary json:");
-        System.out.println(json);
-        System.out.println("Converted to sound");
-        System.out.println(new GameInformationFrequencies().translateJSONToSound(json));
-
-        CRC32 checksumGenerator = new CRC32();
-        checksumGenerator.update(json.getBytes());
-        System.out.println("Checksum of the json:");
-        System.out.println(Integer.toBinaryString((int)checksumGenerator.getValue()));
-*/
-            }
+    }
 }

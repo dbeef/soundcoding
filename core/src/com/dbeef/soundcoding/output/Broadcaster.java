@@ -19,6 +19,9 @@ public class Broadcaster {
     public void sendMessage(String message, int index, LinkedList<String> fileNames) throws InterruptedException {
         System.out.println("in broadcaster. Message is " + message);
 
+        System.out.println("Pause frequency is " + Variables.PAUSE_FREQUENCY);
+        System.out.println("Start-end frequency is " + Variables.START_END_FREQUENCY);
+
         final AudioContext ac = new AudioContext();
 
         long startTime = System.currentTimeMillis();

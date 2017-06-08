@@ -11,19 +11,37 @@ import java.util.LinkedList;
  * Created by dbeef on 26.05.17.
  */
 public class FileMerger {
+    public String finalFileName;
+
     public void merge(LinkedList<String> fileNames) {
         String wavFile1 = fileNames.get(0) + ".wav";
-        fileNames.remove(wavFile1);
+        fileNames.removeFirst();
+
+        boolean firstTime = true;
+        boolean t = true;
+        String fa = "fa.wav";
+        String tr = "tr.wav";
 
         for (String fileName : fileNames) {
 
-            System.out.println("Merging " + wavFile1 + " with " + fileName );
+            System.out.println("Merging " + wavFile1 + " with " + fileName);
 
             String wavFile2 = fileName + ".wav";
 
             try {
-                AudioInputStream clip1 = AudioSystem.getAudioInputStream(new File(wavFile1));
-                AudioInputStream clip2 = AudioSystem.getAudioInputStream(new File(wavFile2));
+                AudioInputStream clip1 = null;
+                AudioInputStream clip2 = null;
+                if (firstTime) {
+                    clip1 = AudioSystem.getAudioInputStream(new File(wavFile1));
+                    clip2 = AudioSystem.getAudioInputStream(new File(wavFile2));
+                } else {
+                    if (t)
+                        clip1 = AudioSystem.getAudioInputStream(new File(tr));
+                    else
+                        clip1 = AudioSystem.getAudioInputStream(new File(fa));
+
+                    clip2 = AudioSystem.getAudioInputStream(new File(wavFile2));
+                }
 
                 AudioInputStream appendedFiles =
                         new AudioInputStream(
@@ -31,14 +49,41 @@ public class FileMerger {
                                 clip1.getFormat(),
                                 clip1.getFrameLength() + clip2.getFrameLength());
 
-                new File(wavFile1).delete();
+                if(t) {
+                    AudioSystem.write(appendedFiles,
+                            AudioFileFormat.Type.WAVE,
+                            new File(fa));
+                finalFileName = fa;
+                }else {
+                    AudioSystem.write(appendedFiles,
+                            AudioFileFormat.Type.WAVE,
+                            new File(tr));
+                finalFileName = tr;
+                }
+                clip1.close();
+                clip2.close();
 
-                AudioSystem.write(appendedFiles,
-                        AudioFileFormat.Type.WAVE,
-                        new File(wavFile1));
+                if(t) {
+                    System.gc();
+                    new File(tr).setWritable(true);
+                    System.gc();
+                    new File(tr).delete();
+                    System.gc();
+                }
+                else
+                {
+                    System.gc();
+                    new File(fa).setWritable(true);
+                    System.gc();
+                    new File(fa).delete();
+                    System.gc();
+
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            t = !t;
+            firstTime = false;
         }
     }
 }

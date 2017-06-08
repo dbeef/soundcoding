@@ -36,6 +36,7 @@ public class GameScreen implements Screen {
     private float deltaTime;
     private Sprite cross;
     private SpriteBatch batch;
+
     private Viewport viewport;
     private Box2DDebugRenderer dr;
     private Ship playerShip;
@@ -194,6 +195,8 @@ public class GameScreen implements Screen {
         playerShip.takeSimulationReflection(bodiesDatabase.getBodies().get(0));
         enemyShip.takeSimulationReflection(bodiesDatabase.getBodies().get(1));
 
+        System.out.println(soundifiedJsonDecoder.isJsonParsedSuccessfully());
+
         camera.setPosition((float) playerShip.giveX() + 30, (float) playerShip.giveY() + 70);
 
         if (iI.touched == true) {
@@ -204,15 +207,24 @@ public class GameScreen implements Screen {
             bodiesDatabase.playerSideToRotate(temp.x, temp.y);
         }
         if(soundifiedJsonDecoder.isJsonParsedSuccessfully()){
-            System.out.println("Teraz ustawiam pozycje posx i posy myszki przeciwnika");
+            if(soundifiedJsonDecoder.getGameInformation() != null && (soundifiedJsonDecoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_X)) != null && (soundifiedJsonDecoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_Y) != null)){
+
             Vector3 temp = new Vector3();
             temp.x = (soundifiedJsonDecoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_X));
             temp.y =  (soundifiedJsonDecoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_Y));
             camera.unproject(temp);
             bodiesDatabase.enemySideToRotate(temp.x, temp.y);
+
+                bodiesDatabase.captureSimulation();
+                System.out.println("Capturing simulation.");
+
+        soundifiedJsonDecoder.setGameInformation(null);
+        soundifiedJsonDecoder.setMessage(null);
+        soundifiedJsonDecoder.setJsonParsedSuccessfully(false);
+        sniffer.clearDetectedMessages();
+            }
         }
     }
-
     @Override
     public void resize(int width, int height) {
         // TODO Auto-generated method stub
@@ -259,6 +271,7 @@ public class GameScreen implements Screen {
         if ((soundifiedJsonDecoderThread == null || !soundifiedJsonDecoderThread.isAlive()) && soundifiedJsonDecoder.getGameInformation() == null) {
             String message = sniffer.getMessage();
             soundifiedJsonDecoder = new SoundifiedJsonDecoder(message);
+            keyboardInterpreter.setDecoder(soundifiedJsonDecoder);
             soundifiedJsonDecoderThread = new Thread(soundifiedJsonDecoder);
             soundifiedJsonDecoderThread.start();
         }

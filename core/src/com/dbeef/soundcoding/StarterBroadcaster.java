@@ -65,7 +65,7 @@ public class StarterBroadcaster implements Runnable {
 
             String tempMessage = null;
 
-            if (a > 0 && message.charAt(a) == '$') {
+            if (message.charAt(a) == '$') {
                 tempMessage = "$" + message.charAt(a + 1);
                 a++;
             }
@@ -74,7 +74,7 @@ public class StarterBroadcaster implements Runnable {
 
             try {
                 if (tempMessage == null) {
-                    broadcaster.sendMessage(Integer.toString((int) s.charAt(a)), a, fileNames);
+                    broadcaster.sendMessage(Character.toString(s.charAt(a)), a, fileNames);
                 } else {
                     System.out.println("Sending " + tempMessage);
                     broadcaster.sendMessage(tempMessage, a, fileNames);
@@ -94,7 +94,7 @@ public class StarterBroadcaster implements Runnable {
 
         mergingFiles = true;
 
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("0A.wav"));
+        Music music = Gdx.audio.newMusic(Gdx.files.internal(fileMerger.finalFileName));
         music.setLooping(false);
         music.play();
         while(music.isPlaying()){

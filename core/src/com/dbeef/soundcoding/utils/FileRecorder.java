@@ -1,26 +1,24 @@
 package com.dbeef.soundcoding.utils;
 
-import java.io.IOException;
-
-import com.badlogic.gdx.Audio;
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.Bead;
 import net.beadsproject.beads.data.Buffer;
 import net.beadsproject.beads.data.Sample;
 import net.beadsproject.beads.data.audiofile.AudioFileType;
-import net.beadsproject.beads.events.KillTrigger;
 import net.beadsproject.beads.ugens.Clock;
-import net.beadsproject.beads.ugens.Envelope;
-import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.RecordToSample;
 import net.beadsproject.beads.ugens.WavePlayer;
+
+import java.io.IOException;
 
 /**
  * https://github.com/orsjb/beads/blob/master/packages/Beads/beads_tutorial/Lesson09_RecordToSample.java
  * https://stackoverflow.com/questions/653861/join-two-wav-files-from-java
  */
 public class FileRecorder {
-    public void record(final AudioContext a,    final String fileIndex, final int frequency) {
+    public void record(final AudioContext a, final String fileIndex, final int frequency) {
+
+        System.out.println("In file recorder. Now frequency: " + frequency);
 
         final AudioContext ac = new AudioContext();
         final Sample outputSample = new Sample(5000D);
@@ -37,7 +35,7 @@ public class FileRecorder {
                             wp.setTimerMode(true);
                             ac.out.addInput(wp);
                         }
-                        if (c.getCount() >= 4) {
+                        if (c.getCount() >= 2f) {
                             recordToSample.clip();
                             Sample sample = recordToSample.getSample();
                             try {

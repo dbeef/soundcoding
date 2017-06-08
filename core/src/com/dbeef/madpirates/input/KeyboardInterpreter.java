@@ -16,6 +16,10 @@ import com.google.gson.Gson;
  */
 public class KeyboardInterpreter {
 
+    public void setDecoder(SoundifiedJsonDecoder decoder) {
+        this.decoder = decoder;
+    }
+
     private SoundifiedJsonDecoder decoder;
     private InputModel inputModel;
     private StarterBroadcaster starterBroadcaster;
@@ -48,15 +52,18 @@ public class KeyboardInterpreter {
             bodiesDatabase.captureSimulation();
             System.out.println("Capturing simulation.");
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.K)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.V)) {
             inputModel.setSimulationTime(3);
+        }
+            if (Gdx.input.isKeyPressed(Input.Keys.K)) {
             inputModel.setWaitingForInput(true);
             decoder.setMessage("");
             decoder.setJsonParsedSuccessfully(false);
             inputModel.setSniffing(false);
         }
-
+//?
             if (Gdx.input.isKeyPressed(Input.Keys.T)) {
+                decoder.setGameInformation(null);
                 inputModel.setWaitingForInput(true);
                 decoder.setMessage("");
                 decoder.setJsonParsedSuccessfully(false);

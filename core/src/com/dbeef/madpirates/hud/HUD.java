@@ -55,14 +55,14 @@ public class HUD {
                 font.draw(batch, "Odczytuje wiadomosc. Wcisnij T aby wyczyscic tablice.", -390, 220);
                 font.draw(batch, "Dotychczas odczytano: " + starterSniffer.getMessage(), -390, -220);
             }
-            if(decoder.isJsonParsedSuccessfully()){
+            if(decoder != null && decoder.isJsonParsedSuccessfully() && decoder.getGameInformation() != null){
+            if( (decoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_X) != null) && (decoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_Y) != null)){
                 hudMode = HudMode.SNIFFING_DONE;
                 font.draw(batch, "Wcisnij K aby zatwierdzic. T aby wrocic. ", 75, 235);
                 font.draw(batch, "Pomyślnie odebrano wiadomosc!.", -390, 235);
                 font.draw(batch, "Pozycja x to: " + decoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_X) + " pozycja y to: " + decoder.getGameInformation().getVariablesAndValues().get(GameInformationFrequencies.PLAYER_POS_Y), -390, -220);
-
                 System.out.println(decoder.getGameInformation().getVariablesAndValues().size());
-
+            }
             }
         }
     }

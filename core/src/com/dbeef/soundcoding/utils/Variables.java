@@ -5,10 +5,10 @@ package com.dbeef.soundcoding.utils;
  */
 public class Variables {
 
-    public static final int TOLERANCE = 50;
-    public static final int PAUSE_FREQUENCY = 3200;
-    public static final int[] DECIMAL_FREQUENCIES = {2000,2100,2200,2300,2400,2500,2600,2700,2800,2900,3000};
-    public static final int START_END_FREQUENCY = 3400;
+    public static final int TOLERANCE = 25;
+    public static final int PAUSE_FREQUENCY = 100;
+    public static final int[] DECIMAL_FREQUENCIES = {200,250,300,350,400,450,500,550,600,650,700};
+    public static final int START_END_FREQUENCY = 150;
     //Minimum 50 for reasonably good reliability
     public static final int MESSAGE_INTERVAL = 75;
 }

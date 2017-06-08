@@ -25,7 +25,7 @@ public class DetectedFrequency {
             if (detectedFrequency > GameInformationFrequencies.FREQUENCIES[a] - Variables.TOLERANCE && detectedFrequency < GameInformationFrequencies.FREQUENCIES[a] +
                     Variables.TOLERANCE) {
                 matchedFrequency = GameInformationFrequencies.FREQUENCIES[a];
-                matchedSign = GameInformationFrequencies.VALUES[a];
+                matchedSign = GameInformationFrequencies.ALL_SPECIAL_VARIABLES[a];
             }
         }
 
@@ -43,6 +43,7 @@ public class DetectedFrequency {
                 matchedSign = "";
             }
         }
+        System.out.println("Matched sign is: " + matchedSign);
     }
 
     public String getMatchedSign() {

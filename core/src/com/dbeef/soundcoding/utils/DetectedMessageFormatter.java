@@ -1,7 +1,6 @@
 package com.dbeef.soundcoding.utils;
 
 import com.dbeef.soundcoding.models.DetectedFrequency;
-import com.dbeef.soundcoding.models.GameInformation;
 import com.dbeef.soundcoding.models.GameInformationFrequencies;
 
 import java.util.ArrayList;
@@ -16,6 +15,8 @@ public class DetectedMessageFormatter {
     private String formattedMessage;
     private String formattedMessageInASCII;
     private String message;
+    private String experiment;
+
     public DetectedMessageFormatter(ArrayList<DetectedFrequency> detectedFrequencies) {
 
         separatedMessages = new ArrayList<String>();
@@ -28,35 +29,18 @@ public class DetectedMessageFormatter {
         }
         if (detectedMessage.length() > 0) {
             formatMessage(detectedMessage);
-            //    formatMessageInASCII();
         }
-
-        formatSpecialMessages();
     }
-    private void formatSpecialMessages(){
-        System.out.println("formattingSpecialMessage");
-        GameInformationFrequencies gameInformationFrequencies = new GameInformationFrequencies();
 
-        //https://stackoverflow.com/questions/15844443/why-java-foreach-doesnt-change-element-value
+    public String getExperiment() {
+        return experiment;
+    }
 
-        for(String specialVariable : gameInformationFrequencies.ALL_SPECIAL_VARIABLES)
-        {
-            //źle! to tylko odczyt
-           /*
-            for(String message : separatedMessages){
-                if(message.contains(specialVariable)) {
-                    message = specialVariable;
-              System.out.println("message: " + message);
-              System.out.println("special variable: " + specialVariable);
-                }
-            }
-            */
-           for(int a =0;a<separatedMessages.size();a++) {
-               if (separatedMessages.get(a).contains(specialVariable)) {
-                   separatedMessages.set(a,specialVariable);
-               }
-           }
-        }
+    private void formatSpecialMessages() {
+        for (String specialVariable : GameInformationFrequencies.ALL_SPECIAL_VARIABLES)
+            for (int a = 0; a < separatedMessages.size(); a++)
+                if (separatedMessages.get(a).contains(specialVariable))
+                    separatedMessages.set(a, specialVariable);
     }
 
     public ArrayList<String> getSeparatedMessages() {
@@ -79,43 +63,44 @@ public class DetectedMessageFormatter {
                 formattedMessage += message.charAt(index);
             }
         }
-        formattedMessage = formattedMessage.replaceAll(" ", "");
 
-        int a = 0;
-        int index_start = 0;
-        int index_end = 0;
-        String temp = formattedMessage;
-        String separatedMessage = "";
-        while (temp.length() > 0) {
-            temp = temp.replaceFirst("/", "");
-            if (temp.contains("/")) {
-                separatedMessage = temp.substring(0, temp.indexOf("/"));
-                temp = temp.replaceFirst(separatedMessage, "");
-                separatedMessages.add(formatMessageInASCII(separatedMessage));
+        System.out.println("Experiment:");
+
+        formattedMessage = formattedMessage.replaceAll(" ", "");
+        String exp = formattedMessage.replaceAll("/", "");
+        System.out.println("Exp before:");
+        for (String specialVar : GameInformationFrequencies.ALL_SPECIAL_VARIABLES) {
+            if (exp.contains(specialVar)) {
+                if (!specialVar.equals("\\{") && !specialVar.equals("\\}") && !specialVar.equals("\"") && !specialVar.equals(":") && !specialVar.equals(",")) {
+                    int position = exp.indexOf(specialVar);
+                    System.out.println("Position: " + position);
+                    System.out.println(exp.length());
+                    exp = exp.replace(specialVar, "");
+                    exp = exp.substring(0, position) + specialVar + exp.substring(position, exp.length());
+                }
             }
-       else
-           break;
         }
+
+
+        if(exp.contains("\"variablesAndValues\":"))
+        {
+            int position = exp.indexOf("\"variablesAndValues\":");
+            exp = exp.replace(("\"variablesAndValues\":"),"");
+            exp = exp.substring(0, position) + ("\"variablesAndValues\":{") + exp.substring(position, exp.length());
+        }
+
+        experiment = exp;
+        if(exp.length() > 0 && exp.charAt(exp.length()-1) == '}'){
+            experiment += "}";
+            System.out.println("Dodaje!");
+        }
+
+        System.out.println(exp);
+
     }
 
     public String formatMessageInASCII(String formattedMessage) {
-        if (!formattedMessage.equals("")) {
-
-            int code;
-            if(formattedMessage.length() < 5) {
-                code = Integer.parseInt(formattedMessage, 10);
-//2 for binary
-                //10 for decimal string
-                char p = (char) code;
-                formattedMessageInASCII = Character.toString(p);
-            }
-            else
-                formattedMessageInASCII = formattedMessage;
-            return formattedMessageInASCII;
-        } else
-            formattedMessageInASCII = "No message detected.";
-
-        return formattedMessageInASCII;
+        return formattedMessage;
     }
 
     public String getFormattedMessage() {
